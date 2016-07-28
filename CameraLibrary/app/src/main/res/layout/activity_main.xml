@@ -8,7 +8,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:gravity="center"
-    tools:context="mindorks.com.cameralibrary.MainActivity">
+    tools:context="com.mindorks.cameralibrary.MainActivity">
     <ImageView
         android:id="@+id/picFrame"
         android:layout_width="wrap_content"
