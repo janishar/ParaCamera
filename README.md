@@ -1,7 +1,7 @@
 # ParaCamera
-Simple android camera to capture and get bitmaps in three steps
+##Simple android camera to capture and get bitmaps in three simple steps:
 
-#1. Build Camera
+##1. Build Camera
 ```java
 
 
@@ -21,14 +21,14 @@ camera.builder()
               
 
 ```
-#2. Capture Image
+##2. Capture Image
 ```java
 
 // Call the camera takePicture method to open the existing camera             
 camera.takePicture();
 
 ```
-#3. Get bitmap and saved image path
+##3. Get bitmap and saved image path
 ```java
 
 // Get the bitmap and image path onActivityResult of an activity
