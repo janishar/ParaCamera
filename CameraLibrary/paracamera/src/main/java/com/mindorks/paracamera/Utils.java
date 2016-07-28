@@ -15,6 +15,14 @@ import java.io.IOException;
  */
 public class Utils {
 
+    /**
+     *
+     * @param context
+     * @param dirName
+     * @param fileName
+     * @param fileType
+     * @return
+     */
     public static File createImageFile(
             Context context,
             String dirName,
@@ -31,6 +39,12 @@ public class Utils {
         }
     }
 
+    /**
+     *
+     * @param context
+     * @param dirName
+     * @return
+     */
     public static File createDir(
             Context context,
             String dirName){
@@ -41,6 +55,12 @@ public class Utils {
         return file;
     }
 
+    /**
+     *
+     * @param file
+     * @param requiredHeight
+     * @return
+     */
     public static Bitmap decodeFile(File file, int requiredHeight) {
         try {
             // Decode image size
@@ -65,6 +85,13 @@ public class Utils {
         }
     }
 
+    /**
+     *
+     * @param bitmap
+     * @param filePath
+     * @param imageType
+     * @param compression
+     */
     public static void saveBitmap(Bitmap bitmap,String filePath, String imageType, int compression){
 
         FileOutputStream out = null;

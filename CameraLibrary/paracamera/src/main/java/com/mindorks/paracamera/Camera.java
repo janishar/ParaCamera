@@ -15,11 +15,17 @@ import java.io.File;
  */
 public class Camera {
 
+    /**
+     * public variables to be used in the builder
+     */
     public static final int REQUEST_TAKE_PHOTO = 1;
     public static final String IMAGE_JPG = "jpg";
     public static final String IMAGE_JPEG = "jpeg";
     public static final String IMAGE_PNG = "png";
 
+    /**
+     * default values used by camera
+     */
     private static final String IMAGE_FORMAT_JPG = ".jpg";
     private static final String IMAGE_FORMAT_JPEG = ".jpeg";
     private static final String IMAGE_FORMAT_PNG = ".png";
@@ -28,6 +34,9 @@ public class Camera {
     private static final String IMAGE_DEFAULT_DIR = "capture";
     private static final String IMAGE_DEFAULT_NAME = "img_";
 
+    /**
+     *  Private variables
+     */
     private Context context;
     private Activity activity;
     private String cameraBitmapPath = null;
@@ -38,6 +47,10 @@ public class Camera {
     private int imageHeight;
     private int compression;
 
+    /**
+     *
+     * @param activity to return the camera results
+     */
     public Camera(Activity activity) {
         this.activity = activity;
         context = activity.getApplicationContext();
@@ -48,10 +61,18 @@ public class Camera {
         imageType = IMAGE_FORMAT_JPG;
     }
 
+    /**
+     *
+     * @return create camera builder
+     */
     public CameraBuilder builder(){
         return new CameraBuilder();
     }
 
+    /**
+     * Initiate the existing camera apps
+     * @throws NullPointerException
+     */
     public void takePicture() throws NullPointerException{
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
@@ -68,12 +89,20 @@ public class Camera {
         }
     }
 
+    /**
+     *
+     * @return the saved bitmap path but scaling bitmap as per builder
+     */
     public String getCameraBitmapPath() {
         Bitmap bitmap = getCameraBitmap();
         bitmap.recycle();
         return cameraBitmapPath;
     }
 
+    /**
+     *
+     * @return The scaled bitmap as per builder
+     */
     public Bitmap getCameraBitmap() {
         try {
             if (cameraBitmap != null) {
@@ -89,12 +118,22 @@ public class Camera {
         }
     }
 
+    /**
+     *
+     * @param imageHeight
+     * @return Bitmap path with approx desired height
+     */
     public String resizeAndGetCameraBitmapPath(int imageHeight) {
         Bitmap bitmap = resizeAndGetCameraBitmap(imageHeight);
         bitmap.recycle();
         return cameraBitmapPath;
     }
 
+    /**
+     *
+     * @param imageHeight
+     * @return Bitmap with approx desired height
+     */
     public Bitmap resizeAndGetCameraBitmap(int imageHeight) {
         try {
             if (cameraBitmap != null) {
@@ -110,6 +149,9 @@ public class Camera {
         }
     }
 
+    /**
+     * Deletes the saved camera image
+     */
     public void deleteImage(){
         if(cameraBitmapPath != null){
             File image = new File(cameraBitmapPath);
@@ -119,6 +161,9 @@ public class Camera {
         }
     }
 
+    /**
+     * Camera builder declaration
+     */
     public class CameraBuilder {
         public CameraBuilder setDirectory(String dirName){
             Camera.this.dirName = dirName;
@@ -147,7 +192,6 @@ public class Camera {
             }
             return this;
         }
-
 
         public CameraBuilder setImageHeight(int imageHeight){
             Camera.this.imageHeight = imageHeight;
