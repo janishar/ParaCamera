@@ -1,5 +1,29 @@
 apply plugin: 'com.android.library'
 
+ext {
+    bintrayRepo = 'mindorks'
+    bintrayName = 'paracamera'
+
+    publishedGroupId = 'com.mindorks'
+    libraryName = 'ParaCamera'
+    artifact = 'paracamera'
+
+    libraryDescription = 'Camera library based on system cameras to get required bitmap'
+
+    siteUrl = 'https://github.com/janishar/ParaCamera'
+    gitUrl = 'https://github.com/janishar/ParaCamera.git'
+
+    libraryVersion = '1.0.0'
+
+    developerId = 'janishar.ali@gmail.com'
+    developerName = 'Janishar Ali'
+    developerEmail = 'janishar.ali@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
@@ -23,3 +47,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.4.0'
 }
+
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
