@@ -2,8 +2,11 @@ package com.mindorks.cameralibrary;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -21,14 +24,17 @@ public class MainActivity extends AppCompatActivity {
 
         picFrame = (ImageView)findViewById(R.id.picFrame);
         camera = new Camera(this);
+    }
 
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
         camera.builder()
                 .setDirectory("pics")
                 .setName("ali_" + System.currentTimeMillis())
                 .setImageFormat(Camera.IMAGE_JPEG)
-                .setCompression(55)
+                .setCompression(75)
                 .setImageHeight(1000);
-
         camera.takePicture();
     }
 

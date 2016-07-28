@@ -60,6 +60,7 @@ public class Utils {
             return BitmapFactory.decodeStream(new FileInputStream(file), null, o2);
         }
         catch (FileNotFoundException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -87,7 +88,6 @@ public class Utils {
                     out.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
             }
         }
     }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import java.io.File;
 
@@ -22,7 +23,7 @@ public class Camera {
     private static final String IMAGE_FORMAT_JPG = ".jpg";
     private static final String IMAGE_FORMAT_JPEG = ".jpeg";
     private static final String IMAGE_FORMAT_PNG = ".png";
-    private static final int IMAGE_HEIGHT = 500;
+    private static final int IMAGE_HEIGHT = 1000;
     private static final int IMAGE_COMPRESSION = 75;
     private static final String IMAGE_DEFAULT_DIR = "capture";
     private static final String IMAGE_DEFAULT_NAME = "img_";
@@ -53,7 +54,7 @@ public class Camera {
 
     public void takePicture() throws NullPointerException{
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
+        if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
             File photoFile = Utils.createImageFile(context, dirName, imageName, imageType);
             if (photoFile != null) {
                 cameraBitmapPath = photoFile.getAbsolutePath();
@@ -68,42 +69,45 @@ public class Camera {
     }
 
     public String getCameraBitmapPath() {
+        Bitmap bitmap = getCameraBitmap();
+        bitmap.recycle();
         return cameraBitmapPath;
     }
 
     public Bitmap getCameraBitmap() {
-        if(cameraBitmap != null) {
-            cameraBitmap.recycle();
+        try {
+            if (cameraBitmap != null) {
+                cameraBitmap.recycle();
+            }
+            cameraBitmap = Utils.decodeFile(new File(cameraBitmapPath), imageHeight);
+            if (cameraBitmap != null) {
+                Utils.saveBitmap(cameraBitmap, cameraBitmapPath, imageType, compression);
+            }
+            return cameraBitmap;
+        }catch (Exception e){
+            return null;
         }
-        cameraBitmap = Utils.decodeFile(new File(cameraBitmapPath), imageHeight);
-        File image = new File(cameraBitmapPath);
-        if(image.exists()){
-            image.delete();
-        }
-        if(cameraBitmap != null){
-            Utils.saveBitmap(cameraBitmap, cameraBitmapPath, imageType, compression);
-        }
-        return cameraBitmap;
     }
 
     public String resizeAndGetCameraBitmapPath(int imageHeight) {
-        resizeAndGetCameraBitmap(imageHeight);
+        Bitmap bitmap = resizeAndGetCameraBitmap(imageHeight);
+        bitmap.recycle();
         return cameraBitmapPath;
     }
 
     public Bitmap resizeAndGetCameraBitmap(int imageHeight) {
-        if(cameraBitmap != null) {
-            cameraBitmap.recycle();
+        try {
+            if (cameraBitmap != null) {
+                cameraBitmap.recycle();
+            }
+            cameraBitmap = Utils.decodeFile(new File(cameraBitmapPath), imageHeight);
+            if (cameraBitmap != null) {
+                Utils.saveBitmap(cameraBitmap, cameraBitmapPath, imageType, compression);
+            }
+            return cameraBitmap;
+        }catch (Exception e){
+            return null;
         }
-        cameraBitmap = Utils.decodeFile(new File(cameraBitmapPath),imageHeight);
-        File image = new File(cameraBitmapPath);
-        if(image.exists()){
-            image.delete();
-        }
-        if(cameraBitmap != null){
-            Utils.saveBitmap(cameraBitmap, cameraBitmapPath, imageType, compression);
-        }
-        return cameraBitmap;
     }
 
     public void deleteImage(){
