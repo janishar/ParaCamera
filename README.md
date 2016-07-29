@@ -61,7 +61,7 @@ camera.takePicture();
 
 # Gradle
 ```java
-compile 'com.mindorks:paracamera:0.0.1'
+compile 'com.mindorks:paracamera:0.0.2'
 ```
 
 # Permissions
