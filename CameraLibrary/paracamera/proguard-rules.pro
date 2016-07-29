@@ -15,3 +15,15 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-keepnames class com.mindorks.paracamera.*
+-keep class com.mindorks.paracamera.Camera {
+    public <methods>;
+    public <fields>;
+}
+-keepattributes InnerClasses
+-keepnames class com.mindorks.paracamera.**
+-keep class com.mindorks.paracamera.Camera$CameraBuilder {
+    public <methods>;
+    public <fields>;
+ }
