@@ -1,4 +1,4 @@
-# ParaCamera
+# ParaCamera (Under Development)
 ##Simple android camera to capture and get bitmaps in three simple steps:
 
 ##1. Build Camera
