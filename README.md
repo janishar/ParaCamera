@@ -63,3 +63,14 @@ camera.takePicture();
 ```java
 compile 'com.mindorks:paracamera:0.0.1'
 ```
+
+# Permissions
+### No permission is required for api 19 (KitKat) and above
+
+### For api 18 and below WRITE_EXTERNAL_STORAGE is required
+```java
+//  For api 18 and less WRITE_EXTERNAL_STORAGE is required
+<uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+```
