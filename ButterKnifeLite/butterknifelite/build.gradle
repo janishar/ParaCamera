@@ -1,0 +1,52 @@
+apply plugin: 'com.android.library'
+
+ext {
+    bintrayRepo = 'mindorks'
+    bintrayName = 'butterknifelite'
+
+    publishedGroupId = 'com.mindorks'
+    libraryName = 'ButterKnifeLite'
+    artifact = 'butterknifelite'
+
+    libraryDescription = 'Android view binder and boiler plate code remover based on the ideas of ButterKnife but vey light'
+
+    siteUrl = 'https://github.com/janishar/ButterKnifeLite'
+    gitUrl = 'https://github.com/janishar/ButterKnifeLite.git'
+
+    libraryVersion = '0.0.1'
+
+    developerId = 'janishar.ali@gmail.com'
+    developerName = 'Janishar Ali'
+    developerEmail = 'janishar.ali@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "24.0.1"
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.4.0'
+}
+
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
