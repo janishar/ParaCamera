@@ -71,7 +71,7 @@ compile 'com.mindorks:paracamera:0.0.2'
 #[`PlaceHolderView`](https://github.com/janishar/PlaceHolderView)
 #### `PlaceHolderView` helps create views without any adapter in a very modular form. It uses the power of RecyclerView and enhances it to another level. For the first time with the list view comes card stack view.
 
-#[`JPost`](https://https://github.com/janishar/JPost)
+#[`JPost`](https://github.com/janishar/JPost)
 #### JPost is a pubsub library based on massages over a channel. It's very efficient and much powerful than other pubsub libraries. It prevents memory leak and increases code control. Also, provide a mechanism to run code asynchronously.
 
 #### Why should you use `JPost` library
