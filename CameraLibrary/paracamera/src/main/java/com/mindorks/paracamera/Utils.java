@@ -3,7 +3,8 @@ package com.mindorks.paracamera;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -115,8 +116,55 @@ public class Utils {
                     out.close();
                 }
             } catch (IOException e) {
+                e.printStackTrace();
             }
         }
+    }
+
+    /**
+     *
+     * @param imagePath
+     * @return
+     */
+    public static int getImageRotation(String imagePath){
+        try {
+            File imageFile = new File(imagePath);
+            if (imageFile.exists()) {
+                ExifInterface exif = new ExifInterface(imageFile.getPath());
+                int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                return exifToDegrees(rotation);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    /**
+     *
+     * @param src
+     * @param rotation
+     * @return
+     */
+    public static Bitmap rotateBitmap(Bitmap src, int rotation){
+        Matrix matrix = new Matrix();
+        if (rotation != 0) {
+            matrix.preRotate(rotation);
+            return Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(), matrix, true);
+        }
+        return src;
+    }
+
+    /**
+     *
+     * @param exifOrientation
+     * @return
+     */
+    private static int exifToDegrees(int exifOrientation) {
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) { return 90; }
+        else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {  return 180; }
+        else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {  return 270; }
+        return 0;
     }
 
 }

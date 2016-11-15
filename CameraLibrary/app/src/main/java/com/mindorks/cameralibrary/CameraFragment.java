@@ -1,35 +1,42 @@
 package com.mindorks.cameralibrary;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.mindorks.paracamera.Camera;
 
-public class MainActivity extends AppCompatActivity {
+/**
+ * Created by janisharali on 15/11/16.
+ */
+
+public class CameraFragment extends Fragment {
 
     private ImageView picFrame;
     private Camera camera;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        picFrame = (ImageView)findViewById(R.id.picFrame);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_camera, null);
+        picFrame = (ImageView)rootView.findViewById(R.id.picFrame);
         camera = new Camera(this);
+        return rootView;
     }
 
     @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         camera.builder()
+                .resetToCorrectOrientation(true)
+                .setTakePhotoRequestCode(1)
                 .setDirectory("pics")
                 .setName("ali_" + System.currentTimeMillis())
                 .setImageFormat(Camera.IMAGE_JPEG)
@@ -42,21 +49,23 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == Camera.REQUEST_TAKE_PHOTO){
             Bitmap bitmap = camera.getCameraBitmap();
             if(bitmap != null) {
                 picFrame.setImageBitmap(bitmap);
             }else{
-                Toast.makeText(this.getApplicationContext(),"Picture not taken!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(),"Picture not taken!",Toast.LENGTH_SHORT).show();
             }
         }
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         camera.deleteImage();
     }
