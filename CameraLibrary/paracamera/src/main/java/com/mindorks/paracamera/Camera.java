@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
 
 import java.io.File;
 
@@ -18,7 +17,7 @@ public class Camera {
     /**
      * public variables to be used in the builder
      */
-    public static final int REQUEST_TAKE_PHOTO = 1;
+    public static int REQUEST_TAKE_PHOTO = 1;
     public static final String IMAGE_JPG = "jpg";
     public static final String IMAGE_JPEG = "jpeg";
     public static final String IMAGE_PNG = "png";
@@ -205,6 +204,11 @@ public class Camera {
                 compression = 0;
             }
             Camera.this.compression = compression;
+            return this;
+        }
+        
+        public CameraBuilder setRequestCode(int requestCode) {
+            Camera.REQUEST_TAKE_PHOTO = requestCode;
             return this;
         }
     }
