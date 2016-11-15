@@ -58,7 +58,7 @@ camera.builder()
 
 # Gradle
 ```groovy
-compile 'com.mindorks:paracamera:0.1.0'
+compile 'com.mindorks:paracamera:0.1.1'
 ```
 
 # Permissions
