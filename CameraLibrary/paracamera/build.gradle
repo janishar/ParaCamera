@@ -13,7 +13,7 @@ ext {
     siteUrl = 'https://github.com/janishar/ParaCamera'
     gitUrl = 'https://github.com/janishar/ParaCamera.git'
 
-    libraryVersion = '0.1.0'
+    libraryVersion = '0.1.1'
 
     developerId = 'janishar.ali@gmail.com'
     developerName = 'Janishar Ali'
@@ -31,12 +31,12 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 1
-        versionName "0.1.0"
+        versionCode 4
+        versionName "0.1.1"
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
