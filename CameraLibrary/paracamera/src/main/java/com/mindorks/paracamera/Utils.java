@@ -23,7 +23,7 @@ public class Utils {
      * @param fileType
      * @return
      */
-    public static File createImageFile(
+    static File createImageFile(
             Context context,
             String dirName,
             String fileName,
@@ -45,7 +45,7 @@ public class Utils {
      * @param dirName
      * @return
      */
-    public static File createDir(
+    private static File createDir(
             Context context,
             String dirName){
         File file = new File(context.getExternalFilesDir(null) + File.separator + dirName);
@@ -61,7 +61,7 @@ public class Utils {
      * @param requiredHeight
      * @return
      */
-    public static Bitmap decodeFile(File file, int requiredHeight) {
+    static Bitmap decodeFile(File file, int requiredHeight) {
         try {
             // Decode image size
             BitmapFactory.Options o = new BitmapFactory.Options();
@@ -92,7 +92,7 @@ public class Utils {
      * @param imageType
      * @param compression
      */
-    public static void saveBitmap(Bitmap bitmap,String filePath, String imageType, int compression){
+    static void saveBitmap(Bitmap bitmap, String filePath, String imageType, int compression) {
 
         FileOutputStream out = null;
         try {
@@ -123,6 +123,7 @@ public class Utils {
                     out.close();
                 }
             } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

@@ -140,7 +140,7 @@ public class Camera {
      * @param imageHeight
      * @return Bitmap with approx desired height
      */
-    public Bitmap resizeAndGetCameraBitmap(int imageHeight) {
+    private Bitmap resizeAndGetCameraBitmap(int imageHeight) {
         try {
             if (cameraBitmap != null) {
                 cameraBitmap.recycle();
