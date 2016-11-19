@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-
 ext {
     bintrayRepo = 'mindorks'
     bintrayName = 'paracamera'
@@ -23,14 +22,13 @@ ext {
     licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
     allLicenses = ["Apache-2.0"]
 }
-
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 25
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 25
         versionCode 1
         versionName "0.0.2"
     }
@@ -41,6 +39,8 @@ android {
         }
     }
 }
-
 apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
 apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
+
+dependencies {
+}
