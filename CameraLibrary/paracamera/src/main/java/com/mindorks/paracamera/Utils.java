@@ -98,14 +98,22 @@ public class Utils {
         try {
             out = new FileOutputStream(filePath);
             // PNG is a loss less format, the compression factor (100) is ignored
-            if(imageType.equals("png") || imageType.equals("PNG") || imageType.equals(".png")){
-                bitmap.compress(Bitmap.CompressFormat.PNG, compression, out);
-            }
-            else if(imageType.equals("jpg") || imageType.equals("JPG") || imageType.equals(".jpg")){
-                bitmap.compress(Bitmap.CompressFormat.JPEG, compression, out);
-            }
-            else if(imageType.equals("jpeg") || imageType.equals("JPEG") || imageType.equals(".jpeg")){
-                bitmap.compress(Bitmap.CompressFormat.JPEG, compression, out);
+            switch (imageType) {
+                case "png":
+                case "PNG":
+                case ".png":
+                    bitmap.compress(Bitmap.CompressFormat.PNG, compression, out);
+                    break;
+                case "jpg":
+                case "JPG":
+                case ".jpg":
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, compression, out);
+                    break;
+                case "jpeg":
+                case "JPEG":
+                case ".jpeg":
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, compression, out);
+                    break;
             }
         } catch (Exception e) {
             e.printStackTrace();

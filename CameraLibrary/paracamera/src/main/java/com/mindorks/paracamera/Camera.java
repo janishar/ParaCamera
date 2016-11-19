@@ -74,19 +74,25 @@ public class Camera {
      * @throws NullPointerException
      */
     public void takePicture() throws NullPointerException{
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
-            File photoFile = Utils.createImageFile(context, dirName, imageName, imageType);
-            if (photoFile != null) {
-                cameraBitmapPath = photoFile.getAbsolutePath();
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-                activity.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-            }else{
-                throw new NullPointerException("Bitmap received from camera is null");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("Thread", "Entrou");
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
+                    File photoFile = Utils.createImageFile(context, dirName, imageName, imageType);
+                    if (photoFile != null) {
+                        cameraBitmapPath = photoFile.getAbsolutePath();
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                        activity.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                    }else{
+                        throw new NullPointerException(context.getString(R.string.err_bitmap_received_is_null));
+                    }
+                }else{
+                    throw new NullPointerException(context.getString(R.string.err_unable_to_open_camera));
+                }
             }
-        }else{
-            throw new NullPointerException("Unable to open camera");
-        }
+        }).start();
     }
 
     /**
@@ -179,16 +185,25 @@ public class Camera {
             if(imageFormat == null){
                 Camera.this.imageType = IMAGE_FORMAT_JPG;
             }
-            if(imageFormat.equals("png") || imageFormat.equals("PNG") || imageFormat.equals(".png")){
-                Camera.this.imageType = IMAGE_FORMAT_PNG;
-            }
-            else if(imageFormat.equals("jpg") || imageFormat.equals("JPG") || imageFormat.equals(".jpg")){
-                Camera.this.imageType = IMAGE_FORMAT_JPG;
-            }
-            else if(imageFormat.equals("jpeg") || imageFormat.equals("JPEG") || imageFormat.equals(".jpeg")){
-                Camera.this.imageType = IMAGE_FORMAT_JPEG;
-            }else{
-                Camera.this.imageType = IMAGE_FORMAT_JPG;
+            switch (imageFormat != null ? imageFormat : "") {
+                case "png":
+                case "PNG":
+                case ".png":
+                    Camera.this.imageType = IMAGE_FORMAT_PNG;
+                    break;
+                case "jpg":
+                case "JPG":
+                case ".jpg":
+                    Camera.this.imageType = IMAGE_FORMAT_JPG;
+                    break;
+                case "jpeg":
+                case "JPEG":
+                case ".jpeg":
+                    Camera.this.imageType = IMAGE_FORMAT_JPEG;
+                    break;
+                default:
+                    Camera.this.imageType = IMAGE_FORMAT_JPG;
+                    break;
             }
             return this;
         }
