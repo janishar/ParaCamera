@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 
 import java.io.File;
 
@@ -34,10 +36,10 @@ public class Camera {
     private static final String IMAGE_DEFAULT_DIR = "capture";
     private static final String IMAGE_DEFAULT_NAME = "img_";
 
-    private enum MODE{ACTIVITY, FRAGMENT}
+    private enum MODE {ACTIVITY, FRAGMENT}
 
     /**
-     *  Private variables
+     * Private variables
      */
     private Context context;
     private Activity activity;
@@ -53,7 +55,6 @@ public class Camera {
     private MODE mode;
 
     /**
-     *
      * @param activity to return the camera results
      */
     public Camera(Activity activity) {
@@ -64,7 +65,6 @@ public class Camera {
     }
 
     /**
-     *
      * @param fragment to return the camera results
      */
     public Camera(Fragment fragment) {
@@ -74,7 +74,7 @@ public class Camera {
         init();
     }
 
-    private void init(){
+    private void init() {
         dirName = IMAGE_DEFAULT_DIR;
         imageName = IMAGE_DEFAULT_NAME + System.currentTimeMillis();
         imageHeight = IMAGE_HEIGHT;
@@ -83,26 +83,32 @@ public class Camera {
     }
 
     /**
-     *
      * @return create camera builder
      */
-    public CameraBuilder builder(){
+    public CameraBuilder builder() {
         return new CameraBuilder();
     }
 
     /**
      * Initiate the existing camera apps
+     *
      * @throws NullPointerException
      */
-    public void takePicture() throws NullPointerException, IllegalAccessException{
+    public void takePicture() throws NullPointerException, IllegalAccessException {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        switch (mode){
+        switch (mode) {
             case ACTIVITY:
                 if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
                     File photoFile = Utils.createImageFile(context, dirName, imageName, imageType);
                     if (photoFile != null) {
                         cameraBitmapPath = photoFile.getAbsolutePath();
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                        Uri uri;
+                        if (Build.VERSION.SDK_INT >= 24) {
+                            uri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", photoFile);
+                        } else {
+                            uri = Uri.fromFile(photoFile);
+                        }
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                         activity.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
                     } else {
                         throw new NullPointerException("Image file could not be created");
@@ -116,7 +122,13 @@ public class Camera {
                     File photoFile = Utils.createImageFile(context, dirName, imageName, imageType);
                     if (photoFile != null) {
                         cameraBitmapPath = photoFile.getAbsolutePath();
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                        Uri uri;
+                        if (Build.VERSION.SDK_INT >= 24) {
+                            uri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", photoFile);
+                        } else {
+                            uri = Uri.fromFile(photoFile);
+                        }
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                         fragment.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
                     } else {
                         throw new NullPointerException("Image file could not be created");
@@ -129,7 +141,6 @@ public class Camera {
     }
 
     /**
-     *
      * @return the saved bitmap path but scaling bitmap as per builder
      */
     public String getCameraBitmapPath() {
@@ -139,7 +150,6 @@ public class Camera {
     }
 
     /**
-     *
      * @return The scaled bitmap as per builder
      */
     public Bitmap getCameraBitmap() {
@@ -147,7 +157,6 @@ public class Camera {
     }
 
     /**
-     *
      * @param imageHeight
      * @return Bitmap path with approx desired height
      */
@@ -158,7 +167,6 @@ public class Camera {
     }
 
     /**
-     *
      * @param imageHeight
      * @return Bitmap with approx desired height
      */
@@ -169,13 +177,13 @@ public class Camera {
             }
             cameraBitmap = Utils.decodeFile(new File(cameraBitmapPath), imageHeight);
             if (cameraBitmap != null) {
-                if(isCorrectOrientationRequired){
+                if (isCorrectOrientationRequired) {
                     cameraBitmap = Utils.rotateBitmap(cameraBitmap, Utils.getImageRotation(cameraBitmapPath));
                 }
                 Utils.saveBitmap(cameraBitmap, cameraBitmapPath, imageType, compression);
             }
             return cameraBitmap;
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
@@ -183,10 +191,10 @@ public class Camera {
     /**
      * Deletes the saved camera image
      */
-    public void deleteImage(){
-        if(cameraBitmapPath != null){
+    public void deleteImage() {
+        if (cameraBitmapPath != null) {
             File image = new File(cameraBitmapPath);
-            if(image.exists()){
+            if (image.exists()) {
                 image.delete();
             }
         }
@@ -196,53 +204,51 @@ public class Camera {
      * Camera builder declaration
      */
     public class CameraBuilder {
-        public CameraBuilder setDirectory(String dirName){
+        public CameraBuilder setDirectory(String dirName) {
             Camera.this.dirName = dirName;
             return this;
         }
 
-        public CameraBuilder setTakePhotoRequestCode(int requestCode){
+        public CameraBuilder setTakePhotoRequestCode(int requestCode) {
             Camera.REQUEST_TAKE_PHOTO = requestCode;
             return this;
         }
 
-        public CameraBuilder setName(String imageName){
+        public CameraBuilder setName(String imageName) {
             Camera.this.imageName = imageName;
             return this;
         }
 
-        public CameraBuilder resetToCorrectOrientation(boolean reset){
+        public CameraBuilder resetToCorrectOrientation(boolean reset) {
             Camera.this.isCorrectOrientationRequired = reset;
             return this;
         }
 
-        public CameraBuilder setImageFormat(String imageFormat){
-            if(imageFormat == null){
+        public CameraBuilder setImageFormat(String imageFormat) {
+            if (imageFormat == null) {
                 Camera.this.imageType = IMAGE_FORMAT_JPG;
             }
-            if(imageFormat.equals("png") || imageFormat.equals("PNG") || imageFormat.equals(".png")){
+            if (imageFormat.equals("png") || imageFormat.equals("PNG") || imageFormat.equals(".png")) {
                 Camera.this.imageType = IMAGE_FORMAT_PNG;
-            }
-            else if(imageFormat.equals("jpg") || imageFormat.equals("JPG") || imageFormat.equals(".jpg")){
+            } else if (imageFormat.equals("jpg") || imageFormat.equals("JPG") || imageFormat.equals(".jpg")) {
                 Camera.this.imageType = IMAGE_FORMAT_JPG;
-            }
-            else if(imageFormat.equals("jpeg") || imageFormat.equals("JPEG") || imageFormat.equals(".jpeg")){
+            } else if (imageFormat.equals("jpeg") || imageFormat.equals("JPEG") || imageFormat.equals(".jpeg")) {
                 Camera.this.imageType = IMAGE_FORMAT_JPEG;
-            }else{
+            } else {
                 Camera.this.imageType = IMAGE_FORMAT_JPG;
             }
             return this;
         }
 
-        public CameraBuilder setImageHeight(int imageHeight){
+        public CameraBuilder setImageHeight(int imageHeight) {
             Camera.this.imageHeight = imageHeight;
             return this;
         }
 
-        public CameraBuilder setCompression(int compression){
-            if(compression > 100){
+        public CameraBuilder setCompression(int compression) {
+            if (compression > 100) {
                 compression = 100;
-            }else if(compression < 0){
+            } else if (compression < 0) {
                 compression = 0;
             }
             Camera.this.compression = compression;
