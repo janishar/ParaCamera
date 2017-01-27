@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -15,6 +16,7 @@ import java.io.IOException;
  * Created by janisharali on 28/07/16.
  */
 public class Utils {
+    private static final String TAG = "Utils";
 
     /**
      *
@@ -32,6 +34,9 @@ public class Utils {
         try {
             File file = createDir(context, dirName);
             File image = new File(file.getAbsoluteFile() + File.separator + fileName + fileType);
+            if (!image.getParentFile().exists()) {
+                image.getParentFile().mkdirs();
+            }
             image.createNewFile();
             return image;
         }catch (Exception e){
@@ -49,7 +54,7 @@ public class Utils {
     public static File createDir(
             Context context,
             String dirName){
-        File file = new File(context.getExternalFilesDir(null) + File.separator + dirName);
+        File file = new File(context.getFilesDir() + File.separator + dirName);
         if(!file.exists()){
             file.mkdir();
         }

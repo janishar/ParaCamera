@@ -5,8 +5,8 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 
 import java.io.File;
 
@@ -15,14 +15,9 @@ import java.io.File;
  */
 public class Camera {
 
-    /**
-     * public variables to be used in the builder
-     */
-    public static int REQUEST_TAKE_PHOTO = 1234;
     public static final String IMAGE_JPG = "jpg";
     public static final String IMAGE_JPEG = "jpeg";
     public static final String IMAGE_PNG = "png";
-
     /**
      * default values used by camera
      */
@@ -33,9 +28,10 @@ public class Camera {
     private static final int IMAGE_COMPRESSION = 75;
     private static final String IMAGE_DEFAULT_DIR = "capture";
     private static final String IMAGE_DEFAULT_NAME = "img_";
-
-    private enum MODE{ACTIVITY, FRAGMENT}
-
+    /**
+     * public variables to be used in the builder
+     */
+    public static int REQUEST_TAKE_PHOTO = 1234;
     /**
      *  Private variables
      */
@@ -51,7 +47,6 @@ public class Camera {
     private int compression;
     private boolean isCorrectOrientationRequired;
     private MODE mode;
-
     /**
      *
      * @param activity to return the camera results
@@ -102,7 +97,7 @@ public class Camera {
                     File photoFile = Utils.createImageFile(context, dirName, imageName, imageType);
                     if (photoFile != null) {
                         cameraBitmapPath = photoFile.getAbsolutePath();
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context, "com.mindorks.fileprovider", photoFile));
                         activity.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
                     } else {
                         throw new NullPointerException("Image file could not be created");
@@ -116,7 +111,7 @@ public class Camera {
                     File photoFile = Utils.createImageFile(context, dirName, imageName, imageType);
                     if (photoFile != null) {
                         cameraBitmapPath = photoFile.getAbsolutePath();
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context, "com.mindorks.fileprovider", photoFile));
                         fragment.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
                     } else {
                         throw new NullPointerException("Image file could not be created");
@@ -191,6 +186,8 @@ public class Camera {
             }
         }
     }
+
+    private enum MODE {ACTIVITY, FRAGMENT}
 
     /**
      * Camera builder declaration
