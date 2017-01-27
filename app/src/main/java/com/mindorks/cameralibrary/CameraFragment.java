@@ -25,23 +25,23 @@ public class CameraFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_camera, null);
+        View rootView = inflater.inflate(R.layout.fragment_camera, container, false);
         picFrame = (ImageView) rootView.findViewById(R.id.picFrame);
-        camera = new Camera(this);
         return rootView;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        camera.builder()
+        camera = Camera.builder(this)
                 .resetToCorrectOrientation(true)
                 .setTakePhotoRequestCode(1)
                 .setDirectory("pics")
                 .setName("ali_" + System.currentTimeMillis())
                 .setImageFormat(Camera.IMAGE_JPEG)
                 .setCompression(75)
-                .setImageHeight(1000);
+                .setImageHeight(1000)
+                .build();
         try {
             camera.takePicture();
         } catch (Exception e) {

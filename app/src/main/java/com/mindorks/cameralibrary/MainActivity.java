@@ -21,18 +21,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         picFrame = (ImageView) findViewById(R.id.picFrame);
-        camera = new Camera(this);
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        camera.builder()
+        camera = Camera.builder(this)
                 .setDirectory("pics")
                 .setName("ali_" + System.currentTimeMillis())
                 .setImageFormat(Camera.IMAGE_JPEG)
                 .setCompression(75)
-                .setImageHeight(1000);
+                .setImageHeight(1000)
+                .build();
         try {
             camera.takePicture();
         } catch (Exception e) {

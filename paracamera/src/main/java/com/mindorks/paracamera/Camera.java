@@ -49,9 +49,10 @@ public class Camera {
     private MODE mode;
 
     /**
+     * Use Camera.builder(activity) to create camera.
      * @param activity to return the camera results
      */
-    public Camera(Activity activity) {
+    private Camera(Activity activity) {
         this.activity = activity;
         context = activity.getApplicationContext();
         mode = MODE.ACTIVITY;
@@ -59,13 +60,28 @@ public class Camera {
     }
 
     /**
+     * Use Camera.builder(fragment) to create camera.
      * @param fragment to return the camera results
      */
-    public Camera(Fragment fragment) {
+    private Camera(Fragment fragment) {
         this.fragment = fragment;
         context = fragment.getActivity().getApplicationContext();
         mode = MODE.FRAGMENT;
         init();
+    }
+
+    /**
+     * @return create camera builder
+     */
+    public static CameraBuilder builder(Activity activity) {
+        return new CameraBuilder(new Camera(activity));
+    }
+
+    /**
+     * @return create camera builder
+     */
+    public static CameraBuilder builder(Fragment fragment) {
+        return new CameraBuilder(new Camera(fragment));
     }
 
     private void init() {
@@ -74,13 +90,6 @@ public class Camera {
         imageHeight = IMAGE_HEIGHT;
         compression = IMAGE_COMPRESSION;
         imageType = IMAGE_FORMAT_JPG;
-    }
-
-    /**
-     * @return create camera builder
-     */
-    public CameraBuilder builder() {
-        return new CameraBuilder();
     }
 
     /**
@@ -93,10 +102,16 @@ public class Camera {
         switch (mode) {
             case ACTIVITY:
                 if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
+
                     File photoFile = Utils.createImageFile(context, dirName, imageName, imageType);
                     if (photoFile != null) {
+
                         cameraBitmapPath = photoFile.getAbsolutePath();
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context, "com.mindorks.fileprovider", photoFile));
+
+                        takePictureIntent.putExtra(
+                                MediaStore.EXTRA_OUTPUT,
+                                FileProvider.getUriForFile(context, "com.mindorks.fileprovider", photoFile));
+
                         activity.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
                     } else {
                         throw new NullPointerException("Image file could not be created");
@@ -107,10 +122,16 @@ public class Camera {
                 break;
             case FRAGMENT:
                 if (takePictureIntent.resolveActivity(fragment.getActivity().getPackageManager()) != null) {
+
                     File photoFile = Utils.createImageFile(context, dirName, imageName, imageType);
                     if (photoFile != null) {
+
                         cameraBitmapPath = photoFile.getAbsolutePath();
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context, "com.mindorks.fileprovider", photoFile));
+
+                        takePictureIntent.putExtra(
+                                MediaStore.EXTRA_OUTPUT,
+                                FileProvider.getUriForFile(context, "com.mindorks.fileprovider", photoFile));
+
                         fragment.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
                     } else {
                         throw new NullPointerException("Image file could not be created");
@@ -187,9 +208,16 @@ public class Camera {
     /**
      * Camera builder declaration
      */
-    public class CameraBuilder {
+    public static class CameraBuilder {
+
+        private Camera camera;
+
+        public CameraBuilder(Camera camera) {
+            this.camera = camera;
+        }
+
         public CameraBuilder setDirectory(String dirName) {
-            Camera.this.dirName = dirName;
+            camera.dirName = dirName;
             return this;
         }
 
@@ -199,33 +227,45 @@ public class Camera {
         }
 
         public CameraBuilder setName(String imageName) {
-            Camera.this.imageName = imageName;
+            camera.imageName = imageName;
             return this;
         }
 
         public CameraBuilder resetToCorrectOrientation(boolean reset) {
-            Camera.this.isCorrectOrientationRequired = reset;
+            camera.isCorrectOrientationRequired = reset;
             return this;
         }
 
         public CameraBuilder setImageFormat(String imageFormat) {
             if (imageFormat == null) {
-                Camera.this.imageType = IMAGE_FORMAT_JPG;
+                camera.imageType = IMAGE_FORMAT_JPG;
+                return this;
             }
-            if (imageFormat.equals("png") || imageFormat.equals("PNG") || imageFormat.equals(".png")) {
-                Camera.this.imageType = IMAGE_FORMAT_PNG;
-            } else if (imageFormat.equals("jpg") || imageFormat.equals("JPG") || imageFormat.equals(".jpg")) {
-                Camera.this.imageType = IMAGE_FORMAT_JPG;
-            } else if (imageFormat.equals("jpeg") || imageFormat.equals("JPEG") || imageFormat.equals(".jpeg")) {
-                Camera.this.imageType = IMAGE_FORMAT_JPEG;
-            } else {
-                Camera.this.imageType = IMAGE_FORMAT_JPG;
+
+            switch (imageFormat) {
+                case "png":
+                case "PNG":
+                case ".png":
+                    camera.imageType = IMAGE_FORMAT_PNG;
+                    break;
+                case "jpg":
+                case "JPG":
+                case ".jpg":
+                    camera.imageType = IMAGE_FORMAT_JPG;
+                    break;
+                case "jpeg":
+                case "JPEG":
+                case ".jpeg":
+                    camera.imageType = IMAGE_FORMAT_JPEG;
+                    break;
+                default:
+                    camera.imageType = IMAGE_FORMAT_JPG;
             }
             return this;
         }
 
         public CameraBuilder setImageHeight(int imageHeight) {
-            Camera.this.imageHeight = imageHeight;
+            camera.imageHeight = imageHeight;
             return this;
         }
 
@@ -235,8 +275,12 @@ public class Camera {
             } else if (compression < 0) {
                 compression = 0;
             }
-            Camera.this.compression = compression;
+            camera.compression = compression;
             return this;
+        }
+
+        public Camera build() {
+            return camera;
         }
     }
 }

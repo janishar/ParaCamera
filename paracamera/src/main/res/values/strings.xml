@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">ParaCamera</string>
     <string name="err_bitmap_received_is_null">Bitmap received from camera is null</string>
     <string name="err_unable_to_open_camera">Unable to open camera</string>
 </resources>
