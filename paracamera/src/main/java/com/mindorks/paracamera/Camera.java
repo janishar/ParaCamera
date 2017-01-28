@@ -19,6 +19,7 @@ public class Camera {
     public static final String IMAGE_JPG = "jpg";
     public static final String IMAGE_JPEG = "jpeg";
     public static final String IMAGE_PNG = "png";
+    private static final String TAG = "Camera";
     /**
      * default values used by camera
      */
@@ -68,7 +69,7 @@ public class Camera {
         isCorrectOrientationRequired = builder.isCorrectOrientationRequired;
         compression = builder.compression;
         imageHeight = builder.imageHeight;
-        authority = context.getString(R.string.files_authority);
+        authority = context.getApplicationContext().getPackageName() + ".imageprovider";
     }
 
     /**
