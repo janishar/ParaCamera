@@ -49,6 +49,8 @@ public class Camera {
     private boolean isCorrectOrientationRequired;
     private MODE mode;
 
+    private String authority;
+
     /**
      * @param builder to copy all the values from.
      */
@@ -64,6 +66,7 @@ public class Camera {
         isCorrectOrientationRequired = builder.isCorrectOrientationRequired;
         compression = builder.compression;
         imageHeight = builder.imageHeight;
+        authority = context.getString(R.string.files_authority);
         init();
     }
 
@@ -96,7 +99,7 @@ public class Camera {
 
                         takePictureIntent.putExtra(
                                 MediaStore.EXTRA_OUTPUT,
-                                FileProvider.getUriForFile(context, "com.mindorks.fileprovider", photoFile));
+                                FileProvider.getUriForFile(context, authority, photoFile));
 
                         activity.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
                     } else {
@@ -116,7 +119,7 @@ public class Camera {
 
                         takePictureIntent.putExtra(
                                 MediaStore.EXTRA_OUTPUT,
-                                FileProvider.getUriForFile(context, "com.mindorks.fileprovider", photoFile));
+                                FileProvider.getUriForFile(context, authority, photoFile));
 
                         fragment.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
                     } else {
