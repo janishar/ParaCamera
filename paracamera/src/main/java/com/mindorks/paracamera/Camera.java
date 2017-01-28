@@ -55,7 +55,8 @@ public class Camera {
      * @param builder to copy all the values from.
      */
     private Camera(Builder builder) {
-        this.activity = builder.activity;
+        init();
+        activity = builder.activity;
         context = builder.context;
         mode = builder.mode;
         fragment = builder.fragment;
@@ -67,7 +68,6 @@ public class Camera {
         compression = builder.compression;
         imageHeight = builder.imageHeight;
         authority = context.getString(R.string.files_authority);
-        init();
     }
 
 
