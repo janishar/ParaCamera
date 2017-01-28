@@ -7,7 +7,7 @@
         android:supportsRtl="true">
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.mindorks.fileprovider"
+            android:authorities="@string/files_authority"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

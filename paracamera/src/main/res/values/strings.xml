@@ -1,4 +1,5 @@
 <resources>
     <string name="err_bitmap_received_is_null">Bitmap received from camera is null</string>
     <string name="err_unable_to_open_camera">Unable to open camera</string>
+    <string name="files_authority" translatable="false">com.mindorks.fileprovider</string>
 </resources>

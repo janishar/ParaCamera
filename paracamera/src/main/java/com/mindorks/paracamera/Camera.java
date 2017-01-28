@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
+import android.text.TextUtils;
 
 import java.io.File;
 
@@ -48,41 +49,29 @@ public class Camera {
     private boolean isCorrectOrientationRequired;
     private MODE mode;
 
+    private String authority;
+
     /**
-     * Use Camera.builder(activity) to create camera.
-     * @param activity to return the camera results
+     * @param builder to copy all the values from.
      */
-    private Camera(Activity activity) {
-        this.activity = activity;
-        context = activity.getApplicationContext();
-        mode = MODE.ACTIVITY;
+    private Camera(Builder builder) {
         init();
+        activity = builder.activity;
+        context = builder.context;
+        mode = builder.mode;
+        fragment = builder.fragment;
+        dirName = builder.dirName;
+        REQUEST_TAKE_PHOTO = builder.REQUEST_TAKE_PHOTO;
+        imageName = builder.imageName;
+        imageType = builder.imageType;
+        isCorrectOrientationRequired = builder.isCorrectOrientationRequired;
+        compression = builder.compression;
+        imageHeight = builder.imageHeight;
+        authority = context.getString(R.string.files_authority);
     }
 
-    /**
-     * Use Camera.builder(fragment) to create camera.
-     * @param fragment to return the camera results
-     */
-    private Camera(Fragment fragment) {
-        this.fragment = fragment;
-        context = fragment.getActivity().getApplicationContext();
-        mode = MODE.FRAGMENT;
-        init();
-    }
 
-    /**
-     * @return create camera builder
-     */
-    public static CameraBuilder builder(Activity activity) {
-        return new CameraBuilder(new Camera(activity));
-    }
 
-    /**
-     * @return create camera builder
-     */
-    public static CameraBuilder builder(Fragment fragment) {
-        return new CameraBuilder(new Camera(fragment));
-    }
 
     private void init() {
         dirName = IMAGE_DEFAULT_DIR;
@@ -110,7 +99,7 @@ public class Camera {
 
                         takePictureIntent.putExtra(
                                 MediaStore.EXTRA_OUTPUT,
-                                FileProvider.getUriForFile(context, "com.mindorks.fileprovider", photoFile));
+                                FileProvider.getUriForFile(context, authority, photoFile));
 
                         activity.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
                     } else {
@@ -130,7 +119,7 @@ public class Camera {
 
                         takePictureIntent.putExtra(
                                 MediaStore.EXTRA_OUTPUT,
-                                FileProvider.getUriForFile(context, "com.mindorks.fileprovider", photoFile));
+                                FileProvider.getUriForFile(context, authority, photoFile));
 
                         fragment.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
                     } else {
@@ -208,37 +197,46 @@ public class Camera {
     /**
      * Camera builder declaration
      */
-    public static class CameraBuilder {
+    public static class Builder {
+        private Context context;
+        private Activity activity;
+        private Fragment fragment;
+        private String dirName;
+        private String imageName;
+        private String imageType;
+        private int imageHeight;
+        private int compression;
+        private boolean isCorrectOrientationRequired;
+        private MODE mode;
+        private int REQUEST_TAKE_PHOTO = 1234;
 
-        private Camera camera;
 
-        public CameraBuilder(Camera camera) {
-            this.camera = camera;
+        public Builder() {
         }
 
-        public CameraBuilder setDirectory(String dirName) {
-            camera.dirName = dirName;
+        public Builder setDirectory(String dirName) {
+            this.dirName = dirName;
             return this;
         }
 
-        public CameraBuilder setTakePhotoRequestCode(int requestCode) {
-            Camera.REQUEST_TAKE_PHOTO = requestCode;
+        public Builder setTakePhotoRequestCode(int requestCode) {
+            this.REQUEST_TAKE_PHOTO = requestCode;
             return this;
         }
 
-        public CameraBuilder setName(String imageName) {
-            camera.imageName = imageName;
+        public Builder setName(String imageName) {
+            this.imageName = imageName;
             return this;
         }
 
-        public CameraBuilder resetToCorrectOrientation(boolean reset) {
-            camera.isCorrectOrientationRequired = reset;
+        public Builder resetToCorrectOrientation(boolean reset) {
+            this.isCorrectOrientationRequired = reset;
             return this;
         }
 
-        public CameraBuilder setImageFormat(String imageFormat) {
-            if (imageFormat == null) {
-                camera.imageType = IMAGE_FORMAT_JPG;
+        public Builder setImageFormat(String imageFormat) {
+            if (TextUtils.isEmpty(imageFormat)) {
+                this.imageType = IMAGE_FORMAT_JPG;
                 return this;
             }
 
@@ -246,41 +244,51 @@ public class Camera {
                 case "png":
                 case "PNG":
                 case ".png":
-                    camera.imageType = IMAGE_FORMAT_PNG;
+                    this.imageType = IMAGE_FORMAT_PNG;
                     break;
                 case "jpg":
                 case "JPG":
                 case ".jpg":
-                    camera.imageType = IMAGE_FORMAT_JPG;
+                    this.imageType = IMAGE_FORMAT_JPG;
                     break;
                 case "jpeg":
                 case "JPEG":
                 case ".jpeg":
-                    camera.imageType = IMAGE_FORMAT_JPEG;
+                    this.imageType = IMAGE_FORMAT_JPEG;
                     break;
                 default:
-                    camera.imageType = IMAGE_FORMAT_JPG;
+                    this.imageType = IMAGE_FORMAT_JPG;
             }
             return this;
         }
 
-        public CameraBuilder setImageHeight(int imageHeight) {
-            camera.imageHeight = imageHeight;
+        public Builder setImageHeight(int imageHeight) {
+            this.imageHeight = imageHeight;
             return this;
         }
 
-        public CameraBuilder setCompression(int compression) {
+        public Builder setCompression(int compression) {
             if (compression > 100) {
                 compression = 100;
             } else if (compression < 0) {
                 compression = 0;
             }
-            camera.compression = compression;
+            this.compression = compression;
             return this;
         }
 
-        public Camera build() {
-            return camera;
+        public Camera build(Activity activity) {
+            this.activity = activity;
+            context = activity.getApplicationContext();
+            mode = MODE.ACTIVITY;
+            return new Camera(this);
+        }
+
+        public Camera build(Fragment fragment) {
+            this.fragment = fragment;
+            context = fragment.getActivity().getApplicationContext();
+            mode = MODE.FRAGMENT;
+            return new Camera(this);
         }
     }
 }
