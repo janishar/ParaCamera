@@ -26,13 +26,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        camera = Camera.builder(this)
+        camera = new Camera.Builder()
                 .setDirectory("pics")
                 .setName("ali_" + System.currentTimeMillis())
                 .setImageFormat(Camera.IMAGE_JPEG)
                 .setCompression(75)
                 .setImageHeight(1000)
-                .build();
+                .build(this);
         try {
             camera.takePicture();
         } catch (Exception e) {

@@ -33,7 +33,7 @@ public class CameraFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        camera = Camera.builder(this)
+        camera = new Camera.Builder()
                 .resetToCorrectOrientation(true)
                 .setTakePhotoRequestCode(1)
                 .setDirectory("pics")
@@ -41,7 +41,7 @@ public class CameraFragment extends Fragment {
                 .setImageFormat(Camera.IMAGE_JPEG)
                 .setCompression(75)
                 .setImageHeight(1000)
-                .build();
+                .build(this);
         try {
             camera.takePicture();
         } catch (Exception e) {
