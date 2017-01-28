@@ -43,6 +43,7 @@ android {
 }
 dependencies {
     provided 'com.android.support:support-core-utils:25.1.0'
+    provided 'com.android.support:support-fragment:25.1.0'
 }
 
 apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'

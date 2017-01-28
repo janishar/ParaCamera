@@ -39,6 +39,7 @@ public class Camera {
     private Context context;
     private Activity activity;
     private Fragment fragment;
+    private android.support.v4.app.Fragment compatFragment;
     private String cameraBitmapPath = null;
     private Bitmap cameraBitmap = null;
     private String dirName;
@@ -60,6 +61,7 @@ public class Camera {
         context = builder.context;
         mode = builder.mode;
         fragment = builder.fragment;
+        compatFragment = builder.compatFragment;
         dirName = builder.dirName;
         REQUEST_TAKE_PHOTO = builder.REQUEST_TAKE_PHOTO;
         imageName = builder.imageName;
@@ -122,6 +124,26 @@ public class Camera {
                                 FileProvider.getUriForFile(context, authority, photoFile));
 
                         fragment.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                    } else {
+                        throw new NullPointerException("Image file could not be created");
+                    }
+                } else {
+                    throw new IllegalAccessException("Unable to open camera");
+                }
+                break;
+            case COMPAT_FRAGMENT:
+                if (takePictureIntent.resolveActivity(compatFragment.getActivity().getPackageManager()) != null) {
+
+                    File photoFile = Utils.createImageFile(context, dirName, imageName, imageType);
+                    if (photoFile != null) {
+
+                        cameraBitmapPath = photoFile.getAbsolutePath();
+
+                        takePictureIntent.putExtra(
+                                MediaStore.EXTRA_OUTPUT,
+                                FileProvider.getUriForFile(context, authority, photoFile));
+
+                        compatFragment.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
                     } else {
                         throw new NullPointerException("Image file could not be created");
                     }
@@ -192,7 +214,7 @@ public class Camera {
         }
     }
 
-    private enum MODE {ACTIVITY, FRAGMENT}
+    private enum MODE {ACTIVITY, FRAGMENT, COMPAT_FRAGMENT}
 
     /**
      * Camera builder declaration
@@ -201,6 +223,7 @@ public class Camera {
         private Context context;
         private Activity activity;
         private Fragment fragment;
+        private android.support.v4.app.Fragment compatFragment;
         private String dirName;
         private String imageName;
         private String imageType;
@@ -288,6 +311,13 @@ public class Camera {
             this.fragment = fragment;
             context = fragment.getActivity().getApplicationContext();
             mode = MODE.FRAGMENT;
+            return new Camera(this);
+        }
+
+        public Camera build(android.support.v4.app.Fragment fragment) {
+            compatFragment = fragment;
+            context = fragment.getActivity().getApplicationContext();
+            mode = MODE.COMPAT_FRAGMENT;
             return new Camera(this);
         }
     }
