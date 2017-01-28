@@ -55,7 +55,6 @@ public class Camera {
      * @param builder to copy all the values from.
      */
     private Camera(Builder builder) {
-        init();
         activity = builder.activity;
         context = builder.context;
         mode = builder.mode;
@@ -68,17 +67,6 @@ public class Camera {
         compression = builder.compression;
         imageHeight = builder.imageHeight;
         authority = context.getString(R.string.files_authority);
-    }
-
-
-
-
-    private void init() {
-        dirName = IMAGE_DEFAULT_DIR;
-        imageName = IMAGE_DEFAULT_NAME + System.currentTimeMillis();
-        imageHeight = IMAGE_HEIGHT;
-        compression = IMAGE_COMPRESSION;
-        imageType = IMAGE_FORMAT_JPG;
     }
 
     /**
@@ -208,14 +196,20 @@ public class Camera {
         private int compression;
         private boolean isCorrectOrientationRequired;
         private MODE mode;
-        private int REQUEST_TAKE_PHOTO = 1234;
-
+        private int REQUEST_TAKE_PHOTO;
 
         public Builder() {
+            dirName = Camera.IMAGE_DEFAULT_DIR;
+            imageName = Camera.IMAGE_DEFAULT_NAME + System.currentTimeMillis();
+            imageHeight = Camera.IMAGE_HEIGHT;
+            compression = Camera.IMAGE_COMPRESSION;
+            imageType = Camera.IMAGE_FORMAT_JPG;
+            REQUEST_TAKE_PHOTO = Camera.REQUEST_TAKE_PHOTO;
         }
 
         public Builder setDirectory(String dirName) {
-            this.dirName = dirName;
+            if (dirName != null)
+                this.dirName = dirName;
             return this;
         }
 
@@ -225,7 +219,8 @@ public class Camera {
         }
 
         public Builder setName(String imageName) {
-            this.imageName = imageName;
+            if (imageName != null)
+                this.imageName = imageName;
             return this;
         }
 
@@ -235,8 +230,8 @@ public class Camera {
         }
 
         public Builder setImageFormat(String imageFormat) {
+
             if (TextUtils.isEmpty(imageFormat)) {
-                this.imageType = IMAGE_FORMAT_JPG;
                 return this;
             }
 
