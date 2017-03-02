@@ -57,7 +57,7 @@ camera = new Camera.Builder()
 
 # Gradle
 ```groovy
-compile 'com.mindorks:paracamera:0.2.1'
+compile 'com.mindorks:paracamera:0.2.2'
 ```
 
 ### WRITE_EXTERNAL_STORAGE is required
