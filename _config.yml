@@ -1,0 +1,8 @@
+title: ParaCamera
+description: Simple android camera to capture and get bitmaps in three simple steps
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-cayman
+
+gems:
+  - jekyll-mentions
