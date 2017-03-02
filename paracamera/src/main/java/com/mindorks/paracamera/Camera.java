@@ -4,12 +4,16 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by ali on 4/11/15.
@@ -72,6 +76,28 @@ public class Camera {
         authority = context.getApplicationContext().getPackageName() + ".imageprovider";
     }
 
+    private void setUpIntent(Intent takePictureIntent){
+        File photoFile = Utils.createImageFile(context, dirName, imageName, imageType);
+        if (photoFile != null) {
+
+            cameraBitmapPath = photoFile.getAbsolutePath();
+
+            Uri uri=FileProvider.getUriForFile(context, authority, photoFile);
+
+            takePictureIntent.putExtra(
+                    MediaStore.EXTRA_OUTPUT,
+                    uri);
+            List<ResolveInfo> resInfoList = context.getPackageManager().queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
+            for (ResolveInfo resolveInfo : resInfoList) {
+                String packageName = resolveInfo.activityInfo.packageName;
+                context.grantUriPermission(packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            }
+        }
+        else {
+            throw new NullPointerException("Image file could not be created");
+        }
+    }
+
     /**
      * Initiate the existing camera apps
      *
@@ -82,60 +108,26 @@ public class Camera {
         switch (mode) {
             case ACTIVITY:
                 if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
-
-                    File photoFile = Utils.createImageFile(context, dirName, imageName, imageType);
-                    if (photoFile != null) {
-
-                        cameraBitmapPath = photoFile.getAbsolutePath();
-
-                        takePictureIntent.putExtra(
-                                MediaStore.EXTRA_OUTPUT,
-                                FileProvider.getUriForFile(context, authority, photoFile));
-
-                        activity.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-                    } else {
-                        throw new NullPointerException("Image file could not be created");
-                    }
+                    setUpIntent(takePictureIntent);
+                    activity.startActivityForResult(takePictureIntent,REQUEST_TAKE_PHOTO);
                 } else {
                     throw new IllegalAccessException("Unable to open camera");
                 }
                 break;
+
             case FRAGMENT:
                 if (takePictureIntent.resolveActivity(fragment.getActivity().getPackageManager()) != null) {
-
-                    File photoFile = Utils.createImageFile(context, dirName, imageName, imageType);
-                    if (photoFile != null) {
-
-                        cameraBitmapPath = photoFile.getAbsolutePath();
-
-                        takePictureIntent.putExtra(
-                                MediaStore.EXTRA_OUTPUT,
-                                FileProvider.getUriForFile(context, authority, photoFile));
-
-                        fragment.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-                    } else {
-                        throw new NullPointerException("Image file could not be created");
-                    }
+                        setUpIntent(takePictureIntent);
+                        fragment.startActivityForResult(takePictureIntent,REQUEST_TAKE_PHOTO);
                 } else {
                     throw new IllegalAccessException("Unable to open camera");
                 }
                 break;
+
             case COMPAT_FRAGMENT:
                 if (takePictureIntent.resolveActivity(compatFragment.getActivity().getPackageManager()) != null) {
-
-                    File photoFile = Utils.createImageFile(context, dirName, imageName, imageType);
-                    if (photoFile != null) {
-
-                        cameraBitmapPath = photoFile.getAbsolutePath();
-
-                        takePictureIntent.putExtra(
-                                MediaStore.EXTRA_OUTPUT,
-                                FileProvider.getUriForFile(context, authority, photoFile));
-
-                        compatFragment.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-                    } else {
-                        throw new NullPointerException("Image file could not be created");
-                    }
+                        setUpIntent(takePictureIntent);
+                        compatFragment.startActivityForResult(takePictureIntent,REQUEST_TAKE_PHOTO);
                 } else {
                     throw new IllegalAccessException("Unable to open camera");
                 }
