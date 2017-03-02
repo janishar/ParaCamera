@@ -13,7 +13,7 @@ ext {
     siteUrl = 'https://github.com/janishar/ParaCamera'
     gitUrl = 'https://github.com/janishar/ParaCamera.git'
 
-    libraryVersion = '0.2.1'
+    libraryVersion = '0.2.2'
 
     developerId = 'janishar.ali@gmail.com'
     developerName = 'Janishar Ali'
@@ -31,8 +31,8 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 5
-        versionName "0.2.1"
+        versionCode 6
+        versionName "0.2.2"
     }
     buildTypes {
         release {
