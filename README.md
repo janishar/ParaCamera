@@ -2,9 +2,9 @@
 [ ![Download](https://api.bintray.com/packages/janishar/mindorks/paracamera/images/download.svg) ](https://bintray.com/janishar/mindorks/paracamera/_latestVersion)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ParaCamera-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/4415)
 
-##Simple android camera to capture and get bitmaps in three simple steps:
+## Simple android camera to capture and get bitmaps in three simple steps:
 
-##1. Build Camera
+## 1. Build Camera
 ```java
 // Create global camera reference in an activity or fragment
 Camera camera;
@@ -20,7 +20,7 @@ camera = new Camera.Builder()
                 .setImageHeight(1000)// it will try to achieve this height as close as possible maintaining the aspect ratio; 
                 .build(this);
 ```
-##2. Capture Image
+## 2. Capture Image
 ```java
 // Call the camera takePicture method to open the existing camera             
         try {
@@ -29,7 +29,7 @@ camera = new Camera.Builder()
             e.printStackTrace();
         }
 ```
-##3. Get bitmap and saved image path
+## 3. Get bitmap and saved image path
 ```java
 // Get the bitmap and image path onActivityResult of an activity or fragment
     @Override
