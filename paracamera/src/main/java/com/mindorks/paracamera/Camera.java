@@ -9,9 +9,8 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
-
+import androidx.core.content.FileProvider;
 import java.io.File;
 import java.util.List;
 
@@ -44,7 +43,7 @@ public class Camera {
     private Context context;
     private Activity activity;
     private Fragment fragment;
-    private android.support.v4.app.Fragment compatFragment;
+    private Fragment compatFragment;
     private String cameraBitmapPath = null;
     private Bitmap cameraBitmap = null;
     private String dirName;
@@ -82,7 +81,7 @@ public class Camera {
 
             cameraBitmapPath = photoFile.getAbsolutePath();
 
-            Uri uri=FileProvider.getUriForFile(context, authority, photoFile);
+            Uri uri= FileProvider.getUriForFile(context, authority, photoFile);
 
             takePictureIntent.putExtra(
                     MediaStore.EXTRA_OUTPUT,
@@ -107,28 +106,28 @@ public class Camera {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         switch (mode) {
             case ACTIVITY:
-                if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
+                try{
                     setUpIntent(takePictureIntent);
                     activity.startActivityForResult(takePictureIntent,REQUEST_TAKE_PHOTO);
-                } else {
+                } catch(Exception ex) {
                     throw new IllegalAccessException("Unable to open camera");
                 }
                 break;
 
             case FRAGMENT:
-                if (takePictureIntent.resolveActivity(fragment.getActivity().getPackageManager()) != null) {
+                try{
                         setUpIntent(takePictureIntent);
                         fragment.startActivityForResult(takePictureIntent,REQUEST_TAKE_PHOTO);
-                } else {
+                } catch(Exception ex) {
                     throw new IllegalAccessException("Unable to open camera");
                 }
                 break;
 
             case COMPAT_FRAGMENT:
-                if (takePictureIntent.resolveActivity(compatFragment.getActivity().getPackageManager()) != null) {
+                try{
                         setUpIntent(takePictureIntent);
                         compatFragment.startActivityForResult(takePictureIntent,REQUEST_TAKE_PHOTO);
-                } else {
+                } catch(Exception ex) {
                     throw new IllegalAccessException("Unable to open camera");
                 }
                 break;
@@ -204,7 +203,7 @@ public class Camera {
         private Context context;
         private Activity activity;
         private Fragment fragment;
-        private android.support.v4.app.Fragment compatFragment;
+        private Fragment compatFragment;
         private String dirName;
         private String imageName;
         private String imageType;
@@ -302,12 +301,6 @@ public class Camera {
             return new Camera(this);
         }
 
-        public Camera build(android.support.v4.app.Fragment fragment) {
-            compatFragment = fragment;
-            context = fragment.getActivity().getApplicationContext();
-            mode = MODE.COMPAT_FRAGMENT;
-            return new Camera(this);
-        }
     }
 }
 
