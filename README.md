@@ -64,3 +64,11 @@ implementation 'com.mindorks:paracamera:0.2.2'
 ```xml
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 ```
+
+# About The Author
+You can connect with me here:
+* [Twitter](https://twitter.com/janisharali)
+* [YouTube Channel](https://www.youtube.com/@unusualcode)
+* [LinkedIn](https://www.linkedin.com/in/janishar-ali)
+* [Instagram](https://www.instagram.com/janisharali)
+
